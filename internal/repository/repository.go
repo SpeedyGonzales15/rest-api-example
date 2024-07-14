@@ -13,12 +13,26 @@ type UserRepository interface {
 	Delete(id int) error
 }
 
+type ProductRepository interface {
+	GetAllProducts() ([]models.Product, error)
+	GetProductsById(id int) (models.Product, error)
+}
+
+type OrderRepository interface {
+	CreateOrder(order models.Order) (int, error)
+	GetAllOrders(userId int) ([]models.Order, error)
+}
+
 type Repository struct {
 	UserRepository
+	ProductRepository
+	OrderRepository
 }
 
 func NewRepository(db *sql.DB) *Repository {
 	return &Repository{
-		UserRepository: NewUserPostgres(db),
+		UserRepository:    NewUserPostgres(db),
+		ProductRepository: NewProductPostgres(db),
+		OrderRepository:   NewOrderPostgres(db),
 	}
 }

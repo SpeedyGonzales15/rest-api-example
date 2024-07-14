@@ -4,7 +4,9 @@ import (
 	"log"
 	"net/http"
 
+	"rest-api-example/internal/config"
 	"rest-api-example/internal/handler"
+	"rest-api-example/internal/migration"
 	"rest-api-example/internal/repository"
 	"rest-api-example/internal/service"
 	"rest-api-example/pkg/middleware"
@@ -12,14 +14,27 @@ import (
 )
 
 func main() {
-	err := middleware.LogInit("D:\\rest-api-example\\logs\\app.log")
+	config, err := config.LoadEnvVariables()
 	if err != nil {
-		log.Fatalf("Ошибка инициализации логгера: %v", err)
+		log.Fatal(err)
 	}
 
-	db, err := repository.NewDB()
+	db, err := repository.NewDB(config.DB.Host, config.DB.Port, config.DB.Username, config.DB.Password, config.DB.DbName)
 	if err != nil {
-		middleware.Log.Fatal(err)
+		log.Fatal(err)
+	}
+
+	err = migration.InitUserTable(db)
+	if err != nil {
+		log.Fatalf("Ошибка инициализации таблицы: %v", err)
+	}
+	err = migration.InitProductTable(db)
+	if err != nil {
+		log.Fatalf("Ошибка инициализации таблицы: %v", err)
+	}
+	err = migration.InitOrderTable(db)
+	if err != nil {
+		log.Fatalf("Ошибка инициализации таблицы: %v", err)
 	}
 
 	repos := repository.NewRepository(db)
@@ -27,19 +42,19 @@ func main() {
 	handlers := handler.NewHandler(services)
 
 	mux := handlers.InitRoutes()
-	recoveredMux := middleware.Recovery(mux)
+	loggedMux := middleware.LoggingMiddleware(mux, config.Server.LogFilePath)
+	recoveredMux := middleware.Recovery(loggedMux)
 
 	srv := &http.Server{
-		Addr:         ":8080",
-		Handler:      recoveredMux,
-		ReadTimeout:  5 * time.Second,
-		WriteTimeout: 10 * time.Second,
+		Addr:           ":" + config.Server.Port,
+		Handler:        recoveredMux,
+		MaxHeaderBytes: 1 << 20, // 1MB
+		ReadTimeout:    5 * time.Second,
+		WriteTimeout:   10 * time.Second,
 	}
-
-	middleware.Log.Info("Server started on :8080")
 
 	err = srv.ListenAndServe()
 	if err != http.ErrServerClosed {
-		middleware.Log.Errorf("Server start error: %v", err)
+		log.Fatalf("Server start error: %v", err)
 	}
 }

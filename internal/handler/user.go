@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"rest-api-example/internal/models"
-	"rest-api-example/pkg/middleware"
 	"strconv"
 
 	"github.com/gorilla/mux"
@@ -24,13 +23,16 @@ func (h *Handler) createUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if len(user.Password) < 8 {
+		http.Error(w, "Password must be at least 8 characters long", http.StatusBadRequest)
+		return
+	}
+
 	id, err := h.services.UserServiceList.Create(user)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	middleware.Log.Infof("User %d was created", id)
 
 	res := fmt.Sprintf("User %d was created", id)
 
@@ -50,8 +52,6 @@ func (h *Handler) getUsersList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	middleware.Log.Infof("Got %d users", len(list))
-
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(list)
 }
@@ -69,8 +69,6 @@ func (h *Handler) getUserById(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	middleware.Log.Infof("Got user %d", id)
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(user)
@@ -92,13 +90,21 @@ func (h *Handler) updateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if *user.Age < 18 {
+		http.Error(w, "User must be at least 18 years old", http.StatusBadRequest)
+		return
+	}
+
+	if len(*user.Password) < 8 {
+		http.Error(w, "Password must be at least 8 characters long", http.StatusBadRequest)
+		return
+	}
+
 	err = h.services.UserServiceList.Update(id, user)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	middleware.Log.Infof("User %d was updated", id)
 
 	w.WriteHeader(http.StatusOK)
 }
@@ -116,8 +122,6 @@ func (h *Handler) deleteUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	middleware.Log.Infof("User %d was deleted", id)
 
 	w.WriteHeader(http.StatusOK)
 }

@@ -13,12 +13,26 @@ type UserServiceList interface {
 	Delete(id int) error
 }
 
+type ProductServiceList interface {
+	GetAllProducts() ([]models.Product, error)
+	GetProductsById(id int) (models.Product, error)
+}
+
+type OrderServiceList interface {
+	CreateOrder(order models.Order) (int, error)
+	GetAllOrders(userId int) ([]models.Order, error)
+}
+
 type Service struct {
 	UserServiceList
+	ProductServiceList
+	OrderServiceList
 }
 
 func NewService(repos *repository.Repository) *Service {
 	return &Service{
-		UserServiceList: NewUserService(repos),
+		UserServiceList:    NewUserService(repos),
+		ProductServiceList: NewProductService(repos),
+		OrderServiceList:   NewOrderService(repos),
 	}
 }

@@ -8,7 +8,6 @@ type User struct {
 	Age       int    `json:"age" db:"age"`
 	IsMarried bool   `json:"is_married" db:"is_married"`
 	Password  string `json:"password" db:"password"`
-	Order     []int  `json:"order" db:"order"`
 }
 
 type UpdateUser struct {
@@ -17,5 +16,5 @@ type UpdateUser struct {
 	FullName  *string `json:"full_name"`
 	Age       *int    `json:"age"`
 	IsMarried *bool   `json:"is_married"`
-	Order     *[]int  `json:"order"`
+	Password  *string `json:"password"`
 }
