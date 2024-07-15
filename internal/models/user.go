@@ -10,6 +10,15 @@ type User struct {
 	Password  string `json:"password" db:"password"`
 }
 
+type UserInfo struct {
+	ID        int    `json:"id"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	FullName  string `json:"full_name"`
+	Age       int    `json:"age"`
+	IsMarried bool   `json:"is_married"`
+}
+
 type UpdateUser struct {
 	FirstName *string `json:"first_name"`
 	LastName  *string `json:"last_name"`

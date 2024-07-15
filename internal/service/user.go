@@ -17,11 +17,11 @@ func (s *UserService) Create(user models.User) (int, error) {
 	return s.repo.Create(user)
 }
 
-func (s *UserService) GetAll() ([]models.User, error) {
+func (s *UserService) GetAll() ([]models.UserInfo, error) {
 	return s.repo.GetAll()
 }
 
-func (s *UserService) GetById(id int) (models.User, error) {
+func (s *UserService) GetById(id int) (models.UserInfo, error) {
 	return s.repo.GetById(id)
 }
 

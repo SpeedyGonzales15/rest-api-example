@@ -1,0 +1,5 @@
+2024/07/15 09:46:44 Паника: <nil>
+{"file":"D:/rest-api-example/pkg/middleware/logger.go:26","func":"rest-api-example/pkg/middleware.LoggingMiddleware.func1","level":"info","msg":"Started GET /users/list","time":"2024-07-15T09:47:26+03:00"}
+{"file":"D:/rest-api-example/pkg/middleware/logger.go:28","func":"rest-api-example/pkg/middleware.LoggingMiddleware.func1","level":"info","msg":"Completed GET /users/list (30.0332ms)","time":"2024-07-15T09:47:26+03:00"}
+{"file":"D:/rest-api-example/pkg/middleware/logger.go:26","func":"rest-api-example/pkg/middleware.LoggingMiddleware.func1","level":"info","msg":"Started GET /products/list","time":"2024-07-15T09:47:54+03:00"}
+{"file":"D:/rest-api-example/pkg/middleware/logger.go:28","func":"rest-api-example/pkg/middleware.LoggingMiddleware.func1","level":"info","msg":"Completed GET /products/list (503.3µs)","time":"2024-07-15T09:47:54+03:00"}

@@ -26,8 +26,8 @@ func (r *UserPostgres) Create(user models.User) (int, error) {
 	return id, nil
 }
 
-func (r *UserPostgres) GetAll() ([]models.User, error) {
-	var list []models.User
+func (r *UserPostgres) GetAll() ([]models.UserInfo, error) {
+	var list []models.UserInfo
 
 	query := "SELECT id, first_name, last_name, full_name, age, is_married FROM users"
 	rows, err := r.db.Query(query)
@@ -37,7 +37,7 @@ func (r *UserPostgres) GetAll() ([]models.User, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var user models.User
+		var user models.UserInfo
 		err := rows.Scan(&user.ID, &user.FirstName, &user.LastName, &user.FullName, &user.Age, &user.IsMarried)
 		if err != nil {
 			return nil, err
@@ -52,12 +52,12 @@ func (r *UserPostgres) GetAll() ([]models.User, error) {
 	return list, nil
 }
 
-func (r *UserPostgres) GetById(id int) (models.User, error) {
-	var user models.User
+func (r *UserPostgres) GetById(id int) (models.UserInfo, error) {
+	var user models.UserInfo
 	query := "SELECT id, first_name, last_name, full_name, age, is_married FROM users WHERE id = $1"
 	row := r.db.QueryRow(query, id)
 	if err := row.Scan(&user.ID, &user.FirstName, &user.LastName, &user.FullName, &user.Age, &user.IsMarried); err != nil {
-		return models.User{}, err
+		return models.UserInfo{}, err
 	}
 	return user, nil
 }

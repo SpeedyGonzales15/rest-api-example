@@ -7,8 +7,8 @@ import (
 
 type UserRepository interface {
 	Create(user models.User) (int, error)
-	GetAll() ([]models.User, error)
-	GetById(id int) (models.User, error)
+	GetAll() ([]models.UserInfo, error)
+	GetById(id int) (models.UserInfo, error)
 	Update(id int, input models.UpdateUser) error
 	Delete(id int) error
 }

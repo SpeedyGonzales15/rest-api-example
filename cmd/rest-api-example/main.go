@@ -43,7 +43,7 @@ func main() {
 
 	mux := handlers.InitRoutes()
 	loggedMux := middleware.LoggingMiddleware(mux, config.Server.LogFilePath)
-	recoveredMux := middleware.Recovery(loggedMux)
+	recoveredMux := middleware.Recovery(loggedMux, config.Server.LogFilePath)
 
 	srv := &http.Server{
 		Addr:           ":" + config.Server.Port,

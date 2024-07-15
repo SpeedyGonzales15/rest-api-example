@@ -42,6 +42,7 @@ func (h *Handler) createOrder(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(res)
 }
 
+// Упрощенный вариант с id пользователя в url параметре. По-хорошему надо бы добавить авторизацию по токену, в котором можно было бы хранить id пользователя.
 func (h *Handler) getOrdersList(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userId, err := strconv.Atoi(vars["id"])
